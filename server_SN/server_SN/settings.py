@@ -50,6 +50,7 @@ DJANGO_APPS = [
 PROJECT_APPS = [
     'server_SN',
     'apps.posts',
+    'apps.user',
 ]
 
 THIRD_PARTY_APPS = [
@@ -78,7 +79,7 @@ ROOT_URLCONF = 'server_SN.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,7 +124,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+# AUTHENTICATION_BACKENDS = (
+#     'server_SN.auth_backends.CustomUserModelBackend',
+# )
+# Auth userAccount
+AUTH_USER_MODEL = 'user.UserAccount'
+# CUSTOM_USER_MODEL = 'user.ProfileUser'
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
