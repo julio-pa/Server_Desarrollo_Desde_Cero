@@ -4,8 +4,8 @@ from django.utils import timezone
 # from django.contrib.auth.models import User, UserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 # Signals
-# from django.db.models.signals import post_save
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 # Manager of users
 
 
@@ -50,11 +50,28 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 # The profile date of the user
 
 
-class ProfileUser(models.Model):
+class Profile(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
     img_profile = models.ImageField(
         default='media/images/dyqibe0yx4ibmevfpanb', upload_to='images/')
     bio = models.CharField(max_length=70, blank=True, default='no bio yet')
     joined = models.DateTimeField(default=timezone.now)
-    following = models.IntegerField(default=0, blank=True)
-    followers = models.IntegerField(default=0, blank=True)
+    # Onetomany
+    # following = models.IntegerField(default=0, blank=True)
+    # # ManytoOne
+    # followers = models.ManyToOneRel(
+    #     user, UserAccount, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+
+
+@receiver(post_save, sender=UserAccount)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=UserAccount)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
