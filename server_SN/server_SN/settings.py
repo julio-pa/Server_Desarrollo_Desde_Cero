@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+import cloudinary
 import environ
 
 env = environ.Env()
@@ -43,7 +44,6 @@ DJANGO_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary_storage',
     'django.contrib.staticfiles',
 ]
 
@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = [
     'corsheaders',
     'rest_framework',
     'cloudinary',
+    'cloudinary_storage',
     'djoser',
     'rest_framework_simplejwt',
 ]
@@ -130,6 +131,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Auth userAccount
 AUTH_USER_MODEL = 'user.UserAccount'
 # CUSTOM_USER_MODEL = 'user.ProfileUser'
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -182,6 +185,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_HOSTS_DEV')
 
 # CLOUDINARY
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUDINARY_NAME'),
+    api_key=os.environ.get('CLOUDINARY_API'),
+    api_secret=os.environ.get('CLOUDINARY_API_SECRET')
+)
+
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_NAME'),
     'API_KEY': os.environ.get('CLOUDINARY_API'),
