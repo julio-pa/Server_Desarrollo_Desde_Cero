@@ -125,7 +125,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# AUTHENTICATION_BACKENDS = (
+#     'server_SN.auth_backends.CustomUserModelBackend',
+# )
+# Auth userAccount
 AUTH_USER_MODEL = 'user.UserAccount'
+# CUSTOM_USER_MODEL = 'user.ProfileUser'
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 

@@ -4,10 +4,11 @@ from django.utils import timezone
 # from django.contrib.auth.models import User, UserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 # Signals
-# from django.db.models.signals import post_save
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 # Manager of users
-
 
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -50,11 +51,52 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 # The profile date of the user
 
 
-class ProfileUser(models.Model):
+
+class Profile(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
     img_profile = models.ImageField(
         default='media/images/dyqibe0yx4ibmevfpanb', upload_to='images/')
     bio = models.CharField(max_length=70, blank=True, default='no bio yet')
     joined = models.DateTimeField(default=timezone.now)
-    following = models.IntegerField(default=0, blank=True)
-    followers = models.IntegerField(default=0, blank=True)
+    # Onetomany
+    # following = models.IntegerField(default=0, blank=True)
+    # # ManytoOne
+    # followers = models.ManyToOneRel(
+    #     user, UserAccount, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+
+
+# Create auto profiles when a new user is created
+@receiver(post_save, sender=UserAccount)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=UserAccount)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
+
+# Following system
+
+
+class UserFollowing(models.Model):
+
+    user_id = models.ForeignKey(
+        UserAccount, related_name="following", on_delete=models.CASCADE)
+    following_user_id = models.ForeignKey(
+        UserAccount, related_name="followers", on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user_id', 'following_user_id'],  name="unique_followers")
+        ]
+
+        ordering = ["-created"]
+
+    def __str__(self):
+        return f"{self.user_id} follows {self.following_user_id}"
