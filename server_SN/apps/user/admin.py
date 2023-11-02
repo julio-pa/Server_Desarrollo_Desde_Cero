@@ -1,6 +1,6 @@
 from django.contrib import admin
 from . import models
-from .models import Profile
+from .models import Profile, UserFollowing
 # Register your models here.
 
 
@@ -11,3 +11,4 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Profile)
+admin.site.register(UserFollowing)

@@ -18,16 +18,40 @@ class UserSerializer(UserCreateSerializer):
         ]
 
 
-# class ProfileSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Profile
-#         fields = [
-#             'id',
-#             'user',
-#             'img_profile',
-#             'banner',
-#             'bio',
-#             'joined',
-#             'following',
-#             'followers',
-#         ]
+# Following system serializers
+class UserFollowingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserFollowing
+        fields = [
+            'id',
+            'user_id',
+            'following_user_id',
+            'created'
+        ]
+
+
+class FollowingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserFollowing
+        fields = ("id", "following_user_id", "created")
+
+
+class FollowersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserFollowing
+        fields = ("id", "user_id", "created")
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = (
+            "id",
+            "user",
+            "img_profile",
+            "bio",
+            "joined",
+        )
+        extra_kwargs = {"password": {"write_only": True}}
