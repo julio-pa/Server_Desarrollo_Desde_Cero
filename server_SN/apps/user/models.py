@@ -51,18 +51,12 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 # The profile date of the user
 
 
-
 class Profile(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
     img_profile = models.ImageField(
         default='media/images/dyqibe0yx4ibmevfpanb', upload_to='images/')
-    bio = models.CharField(max_length=70, blank=True, default='no bio yet')
+    bio = models.CharField(max_length=255, blank=True, default='no bio yet')
     joined = models.DateTimeField(default=timezone.now)
-    # Onetomany
-    # following = models.IntegerField(default=0, blank=True)
-    # # ManytoOne
-    # followers = models.ManyToOneRel(
-    #     user, UserAccount, on_delete=models.PROTECT)
 
     def __str__(self):
         return f'{self.user.username} Profile'
