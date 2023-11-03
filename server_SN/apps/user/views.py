@@ -12,7 +12,6 @@ from .models import UserFollowing, UserAccount, Profile
 # Serializers
 from .serializers import ProfileSerializer, UserFollowingSerializer, UserSerializer
 # Create your views here.
-# TODO:Create view to delete user(Only change "is_active" to false)
 
 
 class FollowingSystemView(APIView):
@@ -82,7 +81,7 @@ class UpdateProfileView(APIView):
 
         user_id = profile_data['id']
 
-        print(profile_data)
+        # print(profile_data)
 
         profile = Profile.objects.get(user=user_id)
         user = UserAccount.objects.get(id=user_id)
