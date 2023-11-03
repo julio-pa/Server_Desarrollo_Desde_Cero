@@ -8,4 +8,5 @@ urlpatterns = [
     path('follow', FollowingSystemView.as_view()),
     path('follow/<follow_id>', FollowingSystemView.as_view()),
     path('update', UpdateProfileView.as_view()),
+    path('delete/<account_id>', UserDeleteView.as_view()),
 ]

@@ -99,3 +99,17 @@ class UpdateProfileView(APIView):
             return Response({'profile_updated': serializer.data}, status=status.HTTP_200_OK)
         else:
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserDeleteView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def delete(self, request, account_id, format=None):
+        if UserAccount.objects.filter(id=account_id).exists():
+            account = UserAccount.objects.get(id=account_id)
+            if account.is_active is True:
+                account.is_active = False
+                account.save()
+            return Response({'account': 'account delete successfully'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'account doent exists'}, status=status.HTTP_400_BAD_REQUEST)
