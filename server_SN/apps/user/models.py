@@ -9,6 +9,7 @@ from django.dispatch import receiver
 
 
 # Manager of users
+
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -48,6 +49,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         return self.username
 
 # The profile date of the user
+
 
 
 class Profile(models.Model):
