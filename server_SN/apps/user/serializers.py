@@ -42,6 +42,8 @@ class FollowersSerializer(serializers.ModelSerializer):
         model = UserFollowing
         fields = ("id", "user_id", "created")
 
+# TODO:Create the to_representation function
+
 
 class ProfileSerializer(serializers.ModelSerializer):
 
@@ -55,3 +57,9 @@ class ProfileSerializer(serializers.ModelSerializer):
             "joined",
         )
         extra_kwargs = {"password": {"write_only": True}}
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['user'] = UserSerializer(instance.user).data
+        instance.save()
+        return response
