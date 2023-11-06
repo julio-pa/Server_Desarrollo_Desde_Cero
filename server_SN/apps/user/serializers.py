@@ -42,8 +42,6 @@ class FollowersSerializer(serializers.ModelSerializer):
         model = UserFollowing
         fields = ("id", "user_id", "created")
 
-# TODO:Create the to_representation function
-
 
 class ProfileSerializer(serializers.ModelSerializer):
 
