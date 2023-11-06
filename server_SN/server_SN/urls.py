@@ -25,7 +25,9 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     # User
-    path('api/user/', include('apps.user.urls'))
+    path('api/user/', include('apps.user.urls')),
+    # Post
+    # path('api/post/', include('apps.posts.urls'))
 
 ]
 urlpatterns += [re_path(r'^.*',
