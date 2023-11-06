@@ -41,7 +41,7 @@ class UserListView(APIView):
     def get(self, request, format=None):
         if UserAccount.objects.all().exists():
 
-            users = UserAccount.objects.all()
+            users = UserAccount.objects.filter(is_active=True)
 
             paginator = SmallSetPagination()
             results = paginator.paginate_queryset(users, request)
