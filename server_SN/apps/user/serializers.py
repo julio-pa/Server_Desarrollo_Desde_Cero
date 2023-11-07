@@ -55,6 +55,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "joined",
         )
         extra_kwargs = {"password": {"write_only": True}}
+        extra_kwargs = {'user': {'required': False}}
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
