@@ -22,6 +22,8 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    is_active = serializers.BooleanField(default=True)
+
     class Meta:
         model = Comment
         fields = [

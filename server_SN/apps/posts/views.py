@@ -7,12 +7,11 @@ from rest_framework.parsers import MultiPartParser, FormParser
 # Pagination
 from .pagination import SmallSetPagination, MediumSetPagination
 # Serializers
-from .serializers import PostSerializer
+from .serializers import PostSerializer, CommentSerializer
 # Models
-from .models import Post
+from .models import Post, Comment
 
 
-# TODO: Make the Post,Get,Update and Delete method for the posts
 class PostView(APIView):
     permission_classes = (permissions.AllowAny,)
     parser_classes = (MultiPartParser, FormParser)
@@ -21,7 +20,7 @@ class PostView(APIView):
         # print(request.data)
         post_serializer = PostSerializer(data=request.data)
         if post_serializer.is_valid():
-            print(post_serializer)
+            # print(post_serializer)
             post_serializer.save()
             return Response(post_serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -68,8 +67,32 @@ class PostView(APIView):
             return Response({'error': 'post doesnt exists'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# TODO: Make the Post,Get,Update and Delete method for the comments
-# class CommentView(APIView):
+# TODO: Make the Post,Get,Put and Delete method for the comments
+class CommentView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = CommentSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'comment': serializer.data}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, id_post, format=None):
+        if Comment.objects.all().exists():
+            comments = Comment.objects.filter(is_active=True, post_id=id_post)
+
+            paginator = MediumSetPagination()
+            results = paginator.paginate_queryset(comments, request)
+
+            serializer = CommentSerializer(results, many=True)
+
+            return paginator.get_paginated_response({'comments': serializer.data})
+        else:
+            return Response({'error': 'No comments found'}, status=status.HTTP_404_NOT_FOUND)
+
 
 # TODO: Make the Post,Get and Delete method for the likes
 # class LikesView(APIView):
