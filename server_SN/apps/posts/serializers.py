@@ -3,11 +3,14 @@ from .models import *
 
 
 class PostSerializer(serializers.ModelSerializer):
+    is_active = serializers.BooleanField(default=True)
+
     class Meta:
         model = Post
         fields = [
             'id',
             'user',
+            'slug',
             'text',
             'image',
             'is_active',
@@ -15,6 +18,7 @@ class PostSerializer(serializers.ModelSerializer):
             'modified',
             'deleted',
         ]
+        extra_kwargs = {'user': {'required': False}}
 
 
 class CommentSerializer(serializers.ModelSerializer):

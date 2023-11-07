@@ -27,7 +27,7 @@ urlpatterns = [
     # User
     path('api/user/', include('apps.user.urls')),
     # Post
-    # path('api/post/', include('apps.posts.urls'))
+    path('api/post/', include('apps.posts.urls'))
 
 ]
 urlpatterns += [re_path(r'^.*',
