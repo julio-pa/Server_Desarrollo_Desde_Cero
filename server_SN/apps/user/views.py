@@ -111,4 +111,4 @@ class UserDeleteView(APIView):
                 account.save()
             return Response({'account': 'account delete successfully'}, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'account doent exists'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'account doesnt exists'}, status=status.HTTP_400_BAD_REQUEST)

@@ -55,6 +55,18 @@ class PostView(APIView):
         else:
             return Response({'error': 'post doesnt exists'}, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request, post_id, format=None):
+        if Post.objects.filter(id=post_id, is_active=True).exists():
+            current_post = Post.objects.get(id=post_id)
+
+            current_post.is_active = False
+            current_post.save()
+
+            return Response({'post': 'post delete successfully'}, status=status.HTTP_200_OK)
+
+        else:
+            return Response({'error': 'post doesnt exists'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 # TODO: Make the Post,Get,Update and Delete method for the comments
 # class CommentView(APIView):
