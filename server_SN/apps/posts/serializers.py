@@ -44,7 +44,7 @@ class LikesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like_post
         fields = [
-            'id'
-            'user_id'
-            'post_id'
+            'id',
+            'user_id',
+            'post_id',
         ]

@@ -9,9 +9,9 @@ from rest_framework.parsers import MultiPartParser, FormParser
 # Pagination
 from .pagination import SmallSetPagination, MediumSetPagination
 # Serializers
-from .serializers import PostSerializer, CommentSerializer
+from .serializers import PostSerializer, CommentSerializer, LikesSerializer
 # Models
-from .models import Post, Comment
+from .models import Post, Comment, Like_post
 
 
 class PostView(APIView):
@@ -131,4 +131,22 @@ class CommentView(APIView):
 
 
 # TODO: Make the Post,Get and Delete method for the likes
-# class LikesView(APIView):
+class LikesView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = LikesSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'like': serializer.data}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, like_id, format=None):
+        if Like_post.objects.filter(id=like_id).exists():
+            follow = Like_post.objects.get(id=like_id)
+            follow.delete()
+            return Response({'like': 'like delete successfully'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'follow doent exist'}, status=status.HTTP_400_BAD_REQUEST)
