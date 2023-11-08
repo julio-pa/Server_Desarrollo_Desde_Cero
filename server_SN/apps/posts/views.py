@@ -7,7 +7,7 @@ from django.utils import timezone
 # Imgparsers
 from rest_framework.parsers import MultiPartParser, FormParser
 # Pagination
-from .pagination import SmallSetPagination, MediumSetPagination
+from .pagination import MediumSetPagination, LargeSetPagination
 # Serializers
 from .serializers import PostSerializer, CommentSerializer, LikesSerializer
 # Models
@@ -32,7 +32,7 @@ class PostView(APIView):
         if Post.objects.all().exists():
             posts = Post.objects.filter(is_active=True)
 
-            paginator = MediumSetPagination()
+            paginator = LargeSetPagination()
             results = paginator.paginate_queryset(posts, request)
 
             serializer = PostSerializer(results, many=True)
