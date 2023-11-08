@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from apps.user.serializers import ProfileSerializer
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -14,11 +15,20 @@ class PostSerializer(serializers.ModelSerializer):
             'text',
             'image',
             'is_active',
+            'likes',
             'created',
             'modified',
             'deleted',
         ]
-        extra_kwargs = {'user': {'required': False}}
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+
+        likes_count = Like_post.objects.filter(post_id=instance.id).count()
+        response['likes'] = likes_count
+        response['user'] = ProfileSerializer(instance.user).data
+        instance.save()
+        return response
 
 
 class CommentSerializer(serializers.ModelSerializer):

@@ -1,18 +1,19 @@
 from django.db import models
 from django.utils import timezone
 import uuid
-from apps.user.models import UserAccount
+from apps.user.models import Profile, UserAccount
 
 
 # Create your models here.
 
 
 class Post(models.Model):
-    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     slug = models.SlugField(max_length=255, unique=True, default=uuid.uuid4)
     text = models.CharField(max_length=255)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
     is_active = models.BooleanField(blank=True, default=True)
+    likes = models.IntegerField(default=0, blank=True)
     created = models.DateTimeField(default=timezone.now)
     modified = models.DateTimeField(blank=True, null=True)
     deleted = models.DateTimeField(blank=True, null=True)
@@ -25,7 +26,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    user_id = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
     text = models.CharField(max_length=255)
     is_active = models.BooleanField(blank=True, default=True)
