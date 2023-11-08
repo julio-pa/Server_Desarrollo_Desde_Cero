@@ -49,6 +49,13 @@ class CommentSerializer(serializers.ModelSerializer):
         extra_kwargs = {'user_id': {'required': False},
                         'post_id': {'required': False}}
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+
+        response['user_id'] = ProfileSerializer(instance.user_id).data
+        instance.save()
+        return response
+
 
 class LikesSerializer(serializers.ModelSerializer):
     class Meta:
