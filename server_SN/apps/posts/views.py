@@ -2,6 +2,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import permissions
+# timezone
+from django.utils import timezone
 # Imgparsers
 from rest_framework.parsers import MultiPartParser, FormParser
 # Pagination
@@ -49,6 +51,8 @@ class PostView(APIView):
             serializer = PostSerializer(current_post, data=post_data)
 
             if serializer.is_valid():
+                current_post.modified = timezone.now()
+                current_post.save()
                 serializer.save()
                 return Response({'post_updated': serializer.data}, status=status.HTTP_200_OK)
         else:
@@ -59,6 +63,8 @@ class PostView(APIView):
             current_post = Post.objects.get(id=post_id)
 
             current_post.is_active = False
+            current_post.deleted = timezone.now()
+
             current_post.save()
 
             return Response({'post': 'post delete successfully'}, status=status.HTTP_200_OK)
@@ -67,7 +73,6 @@ class PostView(APIView):
             return Response({'error': 'post doesnt exists'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# TODO: Make the Post,Get,Put and Delete method for the comments
 class CommentView(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -92,6 +97,37 @@ class CommentView(APIView):
             return paginator.get_paginated_response({'comments': serializer.data})
         else:
             return Response({'error': 'No comments found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, format=None):
+        comment_data = request.data
+        comment_id = comment_data['id']
+
+        if Comment.objects.filter(id=comment_id).exists():
+
+            current_comment = Comment.objects.get(id=comment_id)
+            # print(current_comment)
+            serializer = CommentSerializer(current_comment, data=comment_data)
+            if serializer.is_valid():
+                current_comment.modified = timezone.now()
+                current_comment.save()
+                serializer.save()
+                return Response({'comment_edited': serializer.data}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'comment doesnt exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, comment_id, format=None):
+        if Comment.objects.filter(id=comment_id, is_active=True).exists():
+            current_comment = Comment.objects.get(id=comment_id)
+
+            current_comment.is_active = False
+            current_comment.deleted = timezone.now()
+
+            current_comment.save()
+
+            return Response({'comment': 'comment delete successfully'}, status=status.HTTP_200_OK)
+
+        else:
+            return Response({'error': 'comment doesnt exists'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # TODO: Make the Post,Get and Delete method for the likes

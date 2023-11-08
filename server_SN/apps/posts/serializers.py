@@ -36,6 +36,8 @@ class CommentSerializer(serializers.ModelSerializer):
             'modified',
             'deleted',
         ]
+        extra_kwargs = {'user_id': {'required': False},
+                        'post_id': {'required': False}}
 
 
 class LikesSerializer(serializers.ModelSerializer):

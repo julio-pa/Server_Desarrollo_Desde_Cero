@@ -9,4 +9,6 @@ urlpatterns = [
     path('delete/<post_id>', PostView.as_view()),
     path('comment/create', CommentView.as_view()),
     path('comment/list/<id_post>', CommentView.as_view()),
+    path('comment/edit', CommentView.as_view()),
+    path('comment/delete/<comment_id>', CommentView.as_view()),
 ]
