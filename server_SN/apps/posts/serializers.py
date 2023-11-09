@@ -20,6 +20,7 @@ class PostSerializer(serializers.ModelSerializer):
             'modified',
             'deleted',
         ]
+        extra_kwargs = {'user': {'required': False}}
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
