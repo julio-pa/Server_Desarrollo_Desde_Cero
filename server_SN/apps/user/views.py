@@ -42,11 +42,12 @@ class UserListView(APIView):
     def get(self, request, format=None):
         if UserAccount.objects.all().exists():
 
-            users = UserAccount.objects.filter(is_active=True, is_staff=False)
+            users = Profile.objects.filter(
+                user__is_active=True, user__is_staff=False)
 
             paginator = SmallSetPagination()
             results = paginator.paginate_queryset(users, request)
-            serializer = UserSerializer(results, many=True)
+            serializer = ProfileSerializer(results, many=True)
 
             return paginator.get_paginated_response({'users': serializer.data})
         else:
