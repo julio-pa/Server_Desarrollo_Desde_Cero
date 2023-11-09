@@ -33,6 +33,8 @@ class FollowingSystemView(APIView):
         else:
             return Response({'error': 'follow doent exist'}, status=status.HTTP_400_BAD_REQUEST)
 
+# TODO: Get the users with the profile info
+
 
 class UserListView(APIView):
     permission_classes = (permissions.AllowAny,)

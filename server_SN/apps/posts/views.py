@@ -48,13 +48,18 @@ class PostView(APIView):
         if Post.objects.filter(id=post_id).exists():
 
             current_post = Post.objects.get(id=post_id)
-            serializer = PostSerializer(current_post, data=post_data)
 
+            serializer = PostSerializer(current_post, data=post_data)
+            print(serializer)
             if serializer.is_valid():
                 current_post.modified = timezone.now()
                 current_post.save()
+
                 serializer.save()
-                return Response({'post_updated': serializer.data}, status=status.HTTP_200_OK)
+
+                return Response({'post_edited': serializer.data}, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({'error': 'post doesnt exists'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -112,6 +117,8 @@ class CommentView(APIView):
                 current_comment.save()
                 serializer.save()
                 return Response({'comment_edited': serializer.data}, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({'error': 'comment doesnt exists'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -130,7 +137,6 @@ class CommentView(APIView):
             return Response({'error': 'comment doesnt exists'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# TODO: Make the Post,Get and Delete method for the likes
 class LikesView(APIView):
     permission_classes = (permissions.AllowAny,)
 
